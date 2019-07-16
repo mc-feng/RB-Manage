@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <Button type="primary" loading>Loading...</Button>
-    <img src="./assets/logo.png">
     <router-view/>
   </div>
 </template>
