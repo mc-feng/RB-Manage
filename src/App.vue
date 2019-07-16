@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Button type="primary">这个是</Button>
+    <Button type="primary" loading>Loading...</Button>
     <img src="./assets/logo.png">
     <router-view/>
   </div>
