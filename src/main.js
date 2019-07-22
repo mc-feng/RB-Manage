@@ -14,13 +14,14 @@ router.beforeEach(async(to, from, next) => {
   // set page title
   document.title = getPageTitle(to.meta.title)
   // determine whether the user has logged in
-  const hasToken = false//判断是否有token
+  const hasToken = true//判断是否有token
 
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      next({ path: '/' })
+      next({path: '/'})
     } else {
+      next()
       // const hasGetUserInfo = store.getters.name
       // if (hasGetUserInfo) {
       //   next()

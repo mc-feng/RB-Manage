@@ -1,4 +1,4 @@
-import { Card, Button, Table, Menu, Row, Col, Icon, Input, Select, Option, Form, Modal, MenuItem, MenuGroup, Submenu, Tabs, TabPane, Radio, RadioGroup} from 'iview';
+import { Card, Button, Table, Menu, Row, Col, Icon, Input, Select, Option, Form, Modal, MenuItem, MenuGroup, Submenu, Tabs, TabPane, Radio, RadioGroup,FormItem,DatePicker} from 'iview';
 
 const iview = {
     install: function (Vue) {
@@ -20,6 +20,9 @@ const iview = {
         Vue.component('TabPane', TabPane);
         Vue.component('Radio', Radio);
         Vue.component('RadioGroup', RadioGroup)
+        Vue.component("Form",Form)
+        Vue.component("FormItem",FormItem)
+        Vue.component("DatePicker",DatePicker)
     }
 }
 

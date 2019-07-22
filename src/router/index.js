@@ -10,7 +10,29 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    name: '首页',
+    children:[
+      {path:"",component: () => import('@/views/home')}
+    ]
+  },
+  {
+    path: '/meet',
+    component: Layout,
+    name: '会议室',
+    children:[
+      {path:"manage",component: () => import('@/views/yuyue/manage')},
+      {path:"setting",component: () => import('@/views/yuyue/setting')},
+      {path:"whiteName",component: () => import('@/views/yuyue/whiteName')}
+    ]
+  },
+  {
+    path: '/tijian',
+    component: Layout,
+    name: '体检',
+    children:[
+      {path:"yuyue",component: () => import('@/views/tijian/yuyue')},
+      {path:"name",component: () => import('@/views/tijian/name')},
+      {path:"card",component: () => import('@/views/tijian/card')}
+    ]
   },
   {
     path: '/404',
