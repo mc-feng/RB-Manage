@@ -1,8 +1,9 @@
 import axios from '../api/http'
-// export function registerAccount(data) { // 注册
-//     return axios({
-//         url: '/login/registerAccount',
-//         method: 'post',
-//         data: data
-//     })
-// }
+export function login(data) { // 登录
+    return axios.get('/manage/login',{
+        params:data
+    })
+}
+export function manager(datas){//新增管理员信息
+    return axios.post('/manage/manager',datas)
+}

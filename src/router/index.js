@@ -11,7 +11,7 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     children:[
-      {path:"",component: () => import('@/views/home')}
+      {path:"",component: () => import('@/views/home'),name:"首页"}
     ]
   },
   {

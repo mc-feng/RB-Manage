@@ -6,6 +6,7 @@ import router from './router'
 import 'iview/dist/styles/iview.css';
 import iview  from "./until/iview";
 import getPageTitle from '@/until/get-page-title';//设置头title
+import Cookies from 'js-cookie'//在cookie中获取token
 Vue.config.productionTip = false
 Vue.use(iview)
 const whiteList = ['/login'] // no redirect whitelist
@@ -14,8 +15,7 @@ router.beforeEach(async(to, from, next) => {
   // set page title
   document.title = getPageTitle(to.meta.title)
   // determine whether the user has logged in
-  const hasToken = true//判断是否有token
-
+  const hasToken = Cookies.get("token")//判断是否有token
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page

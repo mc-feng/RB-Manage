@@ -63,7 +63,8 @@ export default {
     data(){
        return{
            opendSub:["1","2"],
-           height:(document.documentElement.clientHeight-80)+"px"
+           height:(document.documentElement.clientHeight-80)+"px",
+           message :""
        }
     },
     components:{
@@ -71,7 +72,7 @@ export default {
     },
     // bind event handlers to the handleResize method (defined below)
     mounted: function () {
-       window.addEventListener('resize', this.handleResize)//监听浏览器的缩放事件
+       window.addEventListener('resize', this.handleResize);//监听浏览器的缩放事件
     }, 
     beforeDestroy: function () {
        window.removeEventListener('resize', this.handleResize)//减少性能开销移除监听事件

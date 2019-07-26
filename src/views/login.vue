@@ -34,7 +34,10 @@
     </div>
 </template>
 <script>
-import Dheader from "../components/header"
+import Dheader from "../components/header";
+import {login} from "../api/api";
+import {Message} from 'iview';
+import Cookies from 'js-cookie'//在cookie中获取token
 export default {
     data(){
         return{
@@ -70,11 +73,28 @@ export default {
          this.height = (height.currentTarget.innerHeight-80)+"px"
         },
         handleSubmit(name) {
+            var that = this
             this.$refs[name].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('提交成功!');
+                    console.log(valid)
+                    // Message.success('提交成功!');
+                    login({
+                        "account":this.formInline.user,
+                        "password":this.formInline.password
+                    }).then(response=>{
+                        console.log(response)
+                        if(response.data.code==200){
+                              Message.success('登录成功')
+                              Cookies.set("token", true)
+                              Cookies.set("account",response.data.data.account)
+                              Cookies.set("manageId",response.data.data.managerId)
+                              that.$router.push({ name:"首页" })
+                        }else{
+                            Message.error(response.data.message);
+                        }
+                    })
                 } else {
-                    this.$Message.error('表单验证失败!');
+                    Message.error('表单验证失败!');
                 }
             })
         }

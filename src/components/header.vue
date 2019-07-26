@@ -4,6 +4,13 @@
           <img src="../images/loge.png" alt="图标">
       </div>
       <div class="header-title">PICC健康上海预约后台管理系统</div>
+      <div class="touxiang-warp" v-if="show">
+          <div class="touxiang-left">
+              <div class="border"></div>
+              <span>{{name}}</span>
+           </div>
+          <div class="touxiang-right" @click="exit">退出</div>
+      </div>
     </div>
 </template>
 <style scoped>
@@ -13,8 +20,7 @@
      background: #F77557;
      position: relative;
      display: flex;
-     flex-flow: column nowrap;
-     justify-content: center;
+     align-items: center
  }
  .loge{
      position: absolute;
@@ -35,4 +41,54 @@
      font-size: 18px;
      color: #FFFFFF;
  }
+ .touxiang-warp{
+     display: flex;
+     position:absolute;
+     right: 44px;
+     font-family: PingFangSC-Regular;
+     font-size: 16px;
+     color: #FFFFFF;
+ }
+ .touxiang-right{
+     margin-left: 72px;
+     cursor: pointer;
+     line-height: 30px;
+ }
+ .touxiang-left{
+     display: flex;
+     align-items: center;
+ }
+ .border{
+     width: 30px;
+     height: 30px;
+     border-radius: 50%;
+     background: #FFFFFF;
+     margin-right: 11px;
+ }
 </style>
+<script>
+import Cookies from 'js-cookie'//在cookie中获取token
+export default {
+    data(){
+        return{
+            show:false,
+            name:"李子柒"
+        }
+    },
+    mounted(){
+        if(Cookies.get("token")){
+            this.show = true
+            this.name = Cookies.get("account")
+        }
+     console.log(Cookies.get("token"))
+    },
+    methods:{
+        exit(){
+            Cookies.remove("token")
+            Cookies.remove("account")
+            this.$router.replace({path: '/login'});
+        }
+    }
+}
+</script>
+
