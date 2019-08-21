@@ -36,6 +36,7 @@
 <script>
 import Dheader from "../components/header";
 import {login} from "../api/api";
+import {store} from "../until/store";
 import {Message} from 'iview';
 import Cookies from 'js-cookie'//在cookie中获取token
 export default {
@@ -83,14 +84,22 @@ export default {
                         "password":this.formInline.password
                     }).then(response=>{
                         console.log(response)
-                        if(response.data.code==200){
+                        // if(response.data.code==200){
+                        //       Message.success('登录成功')
+                        //       Cookies.set("token", true)
+                        //       Cookies.set("account",response.data.data.account)
+                        //       Cookies.set("manageId",response.data.data.managerId)
+                        //       that.$router.push({ name:"首页" })
+                        // }else{
+                        //     Message.error(response.data.message);
+                        // }
+                        if(response.data.data.account){
                               Message.success('登录成功')
-                              Cookies.set("token", true)
-                              Cookies.set("account",response.data.data.account)
-                              Cookies.set("manageId",response.data.data.managerId)
+                              Cookies.set("token", response.data.data.token)
+                              store.setMessageAction("account",response.data.data)
                               that.$router.push({ name:"首页" })
                         }else{
-                            Message.error(response.data.message);
+                            Message.error(response.data.data.message);
                         }
                     })
                 } else {

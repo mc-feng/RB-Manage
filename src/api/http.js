@@ -1,7 +1,9 @@
 import axios from 'axios'
 import {Message} from 'iview'
+import Cookies from 'js-cookie'//在cookie中获取token
 import Qs from 'qs'
 // import util from "@/comment/util";
+const hasToken = Cookies.get("token")//判断是否有token
 function startLoading() {
     Message.loading('正在加载中...', 0)
 }
@@ -14,21 +16,31 @@ axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.request.use(
     (request)=>{
              startLoading()
-            const host = 'http://192.168.31.109:8080/yjjk'
+            const host = ' https://www.easy-mock.com/mock/5d0f1d0c7e96485dab3767e4/RBmeetin'
             if (!/^(http|\/\/)/.test(request.url)) {
                 request.url = host + request.url;
             }//设置默认host
+            if (hasToken) {
+                if(request.method=="get"){
+                    request.params.token = hasToken
+                }else{
+                    request.data.token = hasToken
+                }
+            }
             request.data = Qs.stringify(request.data);//传参序列化
-            console.log(request.data)
             return request;
     },
     // (config) => {
     //     config.data = Qs.stringify(config.data);
-    //     console.log(config.data)
+    //     console.log(config)
+    //     console.log(hasToken)
     //     confing.headers = {
     //       'Content-Type':'application/x-www-form-urlencoded'
     //     }
-    //     return confing;
+    //     if (hasToken) {
+    //         confing.headers.Authorization  = hasToken
+    //     }
+    //     return config;
     //     // //设置请求头
     //     // if (localStorage.eToken) {
     //     //     confing.headers.Authorization = localStorage.eToken

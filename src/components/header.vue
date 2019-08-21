@@ -3,7 +3,7 @@
       <div class="loge">
           <img src="../images/loge.png" alt="图标">
       </div>
-      <div class="header-title">PICC健康上海预约后台管理系统</div>
+      <div class="header-title">PPICC健康上海预约后台管理系统</div>
       <div class="touxiang-warp" v-if="show">
           <div class="touxiang-left">
               <div class="border"></div>
@@ -68,6 +68,7 @@
 </style>
 <script>
 import Cookies from 'js-cookie'//在cookie中获取token
+import {store} from "../until/store";
 export default {
     data(){
         return{
@@ -78,14 +79,15 @@ export default {
     mounted(){
         if(Cookies.get("token")){
             this.show = true
-            this.name = Cookies.get("account")
+            console.log()
+            this.name = store.state.account.name
         }
      console.log(Cookies.get("token"))
     },
     methods:{
         exit(){
             Cookies.remove("token")
-            Cookies.remove("account")
+            store.clearMessageAction("account")
             this.$router.replace({path: '/login'});
         }
     }

@@ -5,7 +5,7 @@
            <img src="../images/loge.png" alt="">
            <div class="home-font">
                <p>欢迎登陆</p>
-               <p>PICC健康上海预约后台管理系统</p>
+               <p>PICC健康服务预约管理平台</p>
            </div>
        </div>
     </div>

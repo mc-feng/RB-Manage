@@ -35,6 +35,15 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/guanli',
+    component: Layout,
+    name: '管理',
+    children:[
+      {path:"account",component: () => import('@/views/manage/account')},
+      {path:"role",component: () => import('@/views/manage/role')}
+    ]
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true

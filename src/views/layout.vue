@@ -6,14 +6,16 @@
                 <Menu theme="light" width="185px" :open-names="opendSub">
                     <Submenu name="1">
                         <template slot="title">
-                            <Icon type="ios-people"></Icon>
+                            <Icon type="md-person" />
                             体检预约
                         </template>
-                        <router-link to="/tijian/yuyue" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-2">
-                            <span>预约管理</span>
-                        </router-link>
                         <router-link to="/tijian/name" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
-                            <span>名单管理</span>
+                            <Icon type="ios-calendar-outline" class="font-st"/>
+                            <span>订单管理</span>
+                        </router-link>
+                        <router-link to="/tijian/yuyue" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-2">
+                            <Icon type="ios-checkbox-outline" class="font-st"/>
+                            <span>预约管理</span>
                         </router-link>
                         <router-link to="/tijian/card" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
                             <span>卡卷管理</span>
@@ -34,21 +36,21 @@
                             <span>预约白名单</span>
                         </router-link>
                     </Submenu>
-                    <!-- <Submenu name="3">
-                        <template slot="title">
-                            <Icon type="stats-bars"></Icon>
-                            系统设置
-                        </template>
-                        <Menu-group title="使用">
-                            <Menu-item name="3-1">新增和启动</Menu-item>
-                            <Menu-item name="3-2">活跃分析</Menu-item>
-                            <Menu-item name="3-3">时段分析</Menu-item>
-                        </Menu-group>
-                        <Menu-group title="留存">
-                            <Menu-item name="3-4">用户留存</Menu-item>
-                            <Menu-item name="3-5">流失用户</Menu-item>
-                        </Menu-group>
-                    </Submenu>-->
+                    <template v-if="role==1">
+                        <Submenu name="3">
+                            <template slot="title">
+                                <Icon type="md-settings"></Icon>
+                                系统设置
+                            </template>
+                            <router-link to="/guanli/account" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
+                                <Icon type="md-person-add" class="font-st"/>
+                                <span>账户管理</span>
+                            </router-link>
+                            <router-link to="/guanli/role" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
+                                <span>角色权限</span>
+                            </router-link>
+                        </Submenu>
+                    </template>
                 </Menu> 
             </div>
             <div class="layout-right">
@@ -59,10 +61,11 @@
 </template>
 <script>
 import Dheader from "../components/header"
+import {store} from "../until/store";//全局仓库
 export default {
     data(){
        return{
-           opendSub:["1","2"],
+           opendSub:["1","2","3"],
            height:(document.documentElement.clientHeight-80)+"px",
            message :""
        }
@@ -74,6 +77,9 @@ export default {
     mounted: function () {
        window.addEventListener('resize', this.handleResize);//监听浏览器的缩放事件
     }, 
+    created:function(){
+        this.role= store.state.account.role//前提要account存在
+    },
     beforeDestroy: function () {
        window.removeEventListener('resize', this.handleResize)//减少性能开销移除监听事件
     },
@@ -135,5 +141,9 @@ export default {
    .layout-right{
        width: 100%;
        height: 100%;
+   }
+   .font-st{
+       font-size: 20px;
+       margin-top: -4px;
    }
 </style>
