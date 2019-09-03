@@ -36,7 +36,7 @@
                             <span>预约白名单</span>
                         </router-link>
                     </Submenu>
-                    <template v-if="role==1">
+                    <template v-if="role==0">
                         <Submenu name="3">
                             <template slot="title">
                                 <Icon type="md-settings"></Icon>

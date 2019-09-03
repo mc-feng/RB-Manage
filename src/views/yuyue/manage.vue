@@ -220,9 +220,11 @@ export default {
     methods:{
        handleChange(data){
            this.value1 = data
+           console.log(this.value1)
        },
        handleChange2(data){
            this.value2 = data
+           console.log(this.value2)
        },
         exportData (type) {
             this.$refs.table.exportCsv({

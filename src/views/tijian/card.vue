@@ -23,7 +23,7 @@
                 }
             },
             mounted(){
-                axios.get('https://www.easy-mock.com/mock/5d0f1bc07e96485dab3767ce/example/getlist').then(res=>{
+                axios.get('https://www.easy-mock.com/mock/5d0f1bc07e96485dab3767ce/example/getlist',{params:{}}).then(res=>{
                     console.log(res.data.data.list)
                     var list = []
                     res.data.data.list.forEach(item => {

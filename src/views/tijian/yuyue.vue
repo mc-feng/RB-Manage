@@ -7,22 +7,22 @@
                     <Date-picker type="date" 
                     placeholder="选择日期" 
                     style="width:190px;" 
-                    :value="value1"
+                    :value="sendData.startDate"
                     @on-change="handleChange"></Date-picker>
                     <span>至</span>
                     <Date-picker type="date" 
                     placeholder="选择日期" 
                     style="width:190px;" 
-                    :value="value2"
+                    :value="sendData.endDate"
                     @on-change="handleChange2"></Date-picker>
                 </div>
                 <div class="data-font" style="margin-left:40px">
                     <span>姓名：</span>
-                    <Input  placeholder="请输入姓名查找..." style="width:220px"/>
+                    <Input  placeholder="请输入姓名查找..." style="width:220px" v-model="sendData.name"/>
                 </div>
              </div>
              <div class="data-warp">
-                <div class="button">检索</div>   
+                <div class="button" @click="sreach">检索</div>   
                 <div class="button">重置</div>  
                 <div class="button" @click="showModel2">新增预约</div>
                 <div class="button" @click="exportData()">导出数据</div>
@@ -31,7 +31,7 @@
         <Table :data="tableData1" :columns="tableColumns1" style="margin-top:35px;" ref="table"></Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
-                <Page :total="filter.total" :page-size="filter.limit" :page-size-opts="[10,20,30,40]" show-sizer @on-change="onpagechange" @on-page-size-change="onPageSizeChange"></Page>
+                <Page :total="sendData.total" :page-size="sendData.pageSize"  @on-change="onpagechange"></Page>
             </div>
         </div>
         <Modal
@@ -112,19 +112,21 @@
     </div>
 </template>
 <script>
+import {getYuyue} from "../../api/api";
 import {Message} from 'iview'
 export default {
     data(){
         return{
-            value1:"",
-            value2:"",
+            sendData:{
+                startDate:"",
+                endDate:"",
+                name:"",
+                currentPage:1,
+                pageSize:10,
+                total:0
+            },//发送查询数据
             modal:false,
             modal2:false,
-            filter:{
-                total:100,
-                limit:10,
-                page:0
-            },
             cityList: [
                     {
                         value: '一体机',
@@ -286,10 +288,10 @@ export default {
     },
     methods:{
        handleChange(data){
-           this.value1 = data
+           this.sendData.startDate = data
        },
        handleChange2(data){
-           this.value2 = data
+           this.sendData.endDate = data
        },
         exportData (type) {
             this.$refs.table.exportCsv({
@@ -299,18 +301,24 @@ export default {
         onpagechange(e){
             //需要总条数和当前的页数
             console.log(e)
-            this.filter.page = e  
+            this.sendData.currentPage = e  
             this.getData()
         },  //改变页数
-        onPageSizeChange(e){
-            this.filter.size = e
-            console.log(e)
-            if(this.filter.page===1){ 
-             this.getData()
-            }// 源码中不等于1会自动变成页数1会改变onchange
-        },//改变分页
+        sreach(){
+           this.sendData.currentPage = 1
+           this.getData()
+        },
+        // onPageSizeChange(e){
+        //     this.filter.size = e
+        //     console.log(e)
+        //     if(this.filter.page===1){ 
+        //      this.getData()
+        //     }// 源码中不等于1会自动变成页数1会改变onchange
+        // },//改变分页
         getData(){
-            console.log(this.filter)
+            getYuyue(this.sendData).then((res)=>{
+             console.log(res)
+            })
         },
         showModel2(){
             this.modal2 = true;
@@ -325,7 +333,35 @@ export default {
              }else{
                  Message.warning("此时间段已经关闭")
              }
-        }//改变时间
+        },//改变时间
+        getNowDate(){
+            // 获取当前日期
+            var date = new Date();
+            // 获取当前月份
+            var nowMonth = date.getMonth() + 1;
+            // 获取当前是几号
+            var strDate = date.getDate();
+            // 添加分隔符“-”
+            var seperator = "-";
+            // 对月份进行处理，1-9月在前面添加一个“0”
+            if (nowMonth >= 1 && nowMonth <= 9) {
+            nowMonth = "0" + nowMonth;
+            }
+            // 对月份进行处理，1-9号在前面添加一个“0”
+            if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+            }
+            // 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
+            var nowDate = date.getFullYear() + seperator + nowMonth + seperator + strDate; 
+            return nowDate
+        }
+    },
+    mounted(){
+        var nowDate = this.getNowDate();
+        this.sendData.endDate = nowDate;
+        this.sendData.startDate = nowDate;
+        console.log(nowDate)
+        this.getData()
     }
 }
 </script>

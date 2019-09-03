@@ -67,8 +67,10 @@
  }
 </style>
 <script>
-import Cookies from 'js-cookie'//在cookie中获取token
+import Cookies from 'js-cookie';//在cookie中获取token
 import {store} from "../until/store";
+import {loginOut} from "../api/api";
+import {Message} from 'iview';
 export default {
     data(){
         return{
@@ -79,16 +81,24 @@ export default {
     mounted(){
         if(Cookies.get("token")){
             this.show = true
-            console.log()
+            console.log(store.state)
             this.name = store.state.account.name
         }
      console.log(Cookies.get("token"))
     },
     methods:{
         exit(){
-            Cookies.remove("token")
-            store.clearMessageAction("account")
-            this.$router.replace({path: '/login'});
+            loginOut({}).then((res)=>{
+                if(res.data.success){
+                    Cookies.remove("token")
+                    store.clearMessageAction("account")
+                    this.$router.replace({path: '/login'});
+                    Message.success('退出成功')
+                }else{
+                     Message.error(response.data.message);
+                }
+              console.log(res)
+            })
         }
     }
 }

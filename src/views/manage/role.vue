@@ -179,7 +179,7 @@
     }
 </style>
 <script>
-import {manager} from "../../api/api";
+import {getCity} from "../../api/api";
 export default {
     data(){
         return{
@@ -233,13 +233,18 @@ export default {
     },
     methods:{
         newPeople(){
-            manager({
-                account:"张三",
-                password:"123456"
-            }).then(response=>{
-                console.log(response)
-            })
+            // manager({
+            //     account:"张三",
+            //     password:"123456"
+            // }).then(response=>{
+            //     console.log(response)
+            // })
         }
+    },
+    mounted(){
+      getCity({}).then((res)=>{
+         console.log(res)
+      })
     }
 }
 </script>

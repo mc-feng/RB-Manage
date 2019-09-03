@@ -3,7 +3,6 @@ import {Message} from 'iview'
 import Cookies from 'js-cookie'//在cookie中获取token
 import Qs from 'qs'
 // import util from "@/comment/util";
-const hasToken = Cookies.get("token")//判断是否有token
 function startLoading() {
     Message.loading('正在加载中...', 0)
 }
@@ -16,10 +15,14 @@ axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.request.use(
     (request)=>{
              startLoading()
-            const host = ' https://www.easy-mock.com/mock/5d0f1d0c7e96485dab3767e4/RBmeetin'
+            // const host = ' https://www.easy-mock.com/mock/5d0f1d0c7e96485dab3767e4/RBmeetin'
+            const host = "http://192.168.31.185:8082/yjjk"
+            const hasToken = Cookies.get("token");
             if (!/^(http|\/\/)/.test(request.url)) {
                 request.url = host + request.url;
             }//设置默认host
+            console.log(request)
+            console.log(hasToken)
             if (hasToken) {
                 if(request.method=="get"){
                     request.params.token = hasToken
@@ -62,6 +65,7 @@ axios.interceptors.response.use(
         return response
     },
     (error) => {
+        console.log(error)
         Message.error(error.response.data)
         endLoading()
         // 获取状态码

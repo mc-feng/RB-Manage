@@ -93,13 +93,13 @@ export default {
                         // }else{
                         //     Message.error(response.data.message);
                         // }
-                        if(response.data.data.account){
+                        if(response.data.success){
                               Message.success('登录成功')
                               Cookies.set("token", response.data.data.token)
                               store.setMessageAction("account",response.data.data)
                               that.$router.push({ name:"首页" })
                         }else{
-                            Message.error(response.data.data.message);
+                            Message.error(response.data.message);
                         }
                     })
                 } else {

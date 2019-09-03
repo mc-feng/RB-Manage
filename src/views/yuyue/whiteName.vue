@@ -161,7 +161,7 @@
     }
 </style>
 <script>
-import {manager} from "../../api/api";
+// import {manager} from "../../api/api";
 export default {
     data(){
         return{

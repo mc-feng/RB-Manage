@@ -10,6 +10,11 @@
              <!-- <div class="button" @click="newPeople">新增人员</div> -->
          </div>
          <Table :data="tableData" :columns="tableColumn" style="margin-top:107px;" ref="table" width=1567></Table>
+         <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="filer.total" :current="filer.page" @on-change="changePage" :page-size="filer.size"/>
+            </div>
+        </div>
          <Modal
             v-model="modal1"
             :footer-hide="hideFoot"
@@ -23,24 +28,24 @@
             <div class="modal-content">
                 <div class="modal-content-item">
                     <span>姓名：</span>
-                    <Input :value="modalValue.name" placeholder="请输入姓名" style="width: 455px" />
+                    <Input v-model="modalValue.name" placeholder="请输入姓名" style="width: 455px" />
                 </div>
                 <div class="modal-content-item">
                     <span>账号：</span>
-                    <Input :value="modalValue.account" placeholder="请输入账号" style="width: 455px" :disabled="modalValue.canCheck"/>
+                    <Input v-model="modalValue.account" placeholder="请输入账号" style="width: 455px" :disabled="modalValue.canCheck"/>
                 </div>
                 <div class="modal-content-item">
                     <span>密码：</span>
-                    <Input  :value="modalValue.password" placeholder="请输入密码" style="width: 455px" />
+                    <Input  v-model="modalValue.password" placeholder="请输入密码" style="width: 455px" type="password" />
                 </div>
                 <div class="line"></div>
                 <div class="modal-content-bottom">
                     <span>所在城市：</span>
-                    <Tree :data="modalValue.city" show-checkbox></Tree>
+                    <Tree :data="modalValue.city" @on-select-change="changeTree"></Tree>
                 </div>
             </div>
             <div class="modal-buttun">
-                <div class="button">确认</div>
+                <div class="button" @click="sendTable">确认</div>
                 <div class="button">取消</div>
             </div>
         </Modal>
@@ -58,7 +63,7 @@
                 <div class="tips-font">是否确定删除当前用户？</div>
             </div>
             <div class="modal-buttun">
-                <div class="button">确认</div>
+                <div class="button" @click="sureDelete">确认</div>
                 <div class="button">取消</div>
             </div>
         </Modal>
@@ -167,49 +172,24 @@
     }
 </style>
 <script>
-import {manager} from "../../api/api";
+import {getCity,addManager,findUser,deleteUser,reviseUser} from "../../api/api";
+import {Message,Notice} from 'iview';
 export default {
     data(){
         return{
+            row:{
+              managerId:""
+            },
             value:"",
             modalValue:{
+                managerId:"",
                 title:"",
                 name:"",
                 account:"",
                 password:"",
+                cityId:"",
                 canCheck:false,
-                city: [
-                    {
-                    title: 'parent 1',
-                    expand: true,
-                    children: [
-                            {
-                                title: 'parent 1-1',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-1-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-1-2'
-                                    }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
+                city: []
             },
             modal:false,
             modal1:false,
@@ -217,7 +197,7 @@ export default {
             tableColumn:[
                 {
                     title:"序号",
-                    key:"number"
+                    key:"managerId"
                 },
                 {
                     title:"姓名",
@@ -225,7 +205,7 @@ export default {
                 },
                 {
                     title:"所在城市",
-                    key:"city"
+                    key:"cityName"
                 },
                 {
                     title:"账号",
@@ -233,7 +213,7 @@ export default {
                 },
                 {
                     title:"最后一次登录",
-                    key:"lastLoge"
+                    key:"loginTime"
                 },
                 {
                     title:"操作",
@@ -257,38 +237,18 @@ export default {
                                     marginLeft:"16px",
                                     cursor: 'pointer'
                                 },
-                                on:{click:()=>{this.modal=true;console.log(params)}}
+                                on:{click:()=>{this.modal=true;console.log(params);this.row.managerId=params.row.managerId}}
                             },"删除")
                         ])
                     }
                 }
             ],
-            tableData:[
-                {   
-                    number:"1",
-                    name:"张三",
-                    city:"上海市",
-                    account:"zxxss",
-                    lastLoge:"2019-16-13",
-                    password:"123456"
-                },
-                {   
-                    number:"2",
-                    name:"王五",
-                    city:"杭州市",
-                    account:"zxxss",
-                    lastLoge:"2019-16-13",
-                    password:"123456"
-                },
-                {   
-                    number:"3",
-                    name:"李四",
-                    city:"广东市",
-                    account:"zxxss",
-                    lastLoge:"2019-16-13",
-                    password:"123456"
-                }
-            ]
+            tableData:[],
+            filer:{
+                page:1,
+                size:10,
+                total:0
+            }
         }
     },
     methods:{
@@ -298,34 +258,130 @@ export default {
                 this.modalValue.title = "修改用户"
                 this.modalValue.name = e.row.name
                 this.modalValue.account = e.row.account
-                this.modalValue.password = e.row.password
+                this.modalValue.password = null
+                this.modalValue.cityId = e.row.cityId
+                this.modalValue.managerId = e.row.managerId
                 this.modalValue.canCheck = true
             }else{
                 this.modalValue.title = "新增用户"
                 this.modalValue.name = ""
                 this.modalValue.account = ""
                 this.modalValue.password = ""
+                this.modalValue.cityId = ""
             }
             this.modal1 = true
         },
         changeV(s){
             if(!s){
+                this.modalValue.managerId = ""
                 this.modalValue.title = ""
                 this.modalValue.name = ""
                 this.modalValue.account = ""
                 this.modalValue.password = ""
+                this.modalValue.cityId = ""
                 this.modalValue.canCheck = false
                 console.log("hi,我消失了")
             }
+        },
+        changeTree(e){
+            if(e[0].id){
+                this.modalValue.cityId = e[0].id
+                console.log(e[0].id)
+            }
+        },//改变城市
+        sendTable(){
+            var that = this
+            if(this.modalValue.managerId){
+                console.log(this.modalValue)
+                 reviseUser({
+                     managerId:this.modalValue.managerId,
+                     cityId:this.modalValue.cityId,
+                     name:this.modalValue.name,
+                     password:this.modalValue.password
+                 }).then((res)=>{
+                     if(res.data.success){
+                        that.modal1 = false;
+                        that.upData()
+                    }
+                    console.log(res)
+                 })
+            }else{
+                if(this.modalValue.name==""){
+                    Notice.warning({title:"请填写姓名"});
+                }else if(this.modalValue.account==''){
+                    Notice.warning({title:"请填写账号"});
+                }else if(this.modalValue.password==""){
+                    Notice.warning({title:"请填写密码"});
+                }else if(this.modalValue.cityId ==""){
+                    Notice.warning({title:"请选择城市"});
+                }else{
+                    addManager({
+                        name:this.modalValue.name,
+                        account:this.modalValue.account,
+                        password:this.modalValue.password,
+                        cityId:this.modalValue.cityId
+                    }).then((res)=>{
+                        if(res.data.success){
+                            that.modal1 = false;
+                            that.upData()
+                        }
+                        console.log(res)
+                    })
+                }//添加用户
+            }
+        },
+        upData(){
+           var that = this
+          findUser(
+              {  
+              currentPage:this.filer.page,
+              pageSize:this.filer.size
+              }
+          ).then((res)=>{
+              var data = res.data.data
+              that.tableData =  data.list
+              that.filer.page = data.pageNum
+              that.filer.size = data.pageSize
+              that.filer.total = data.total
+          })
+        },//更新用户数据
+        changePage(e){
+            //需要总条数和当前的页数
+            this.filer.page = e
+            console.log(e)
+            this.upData()
+        },//切换页数
+        sureDelete(){
+            var that = this
+            deleteUser({
+                managerId:this.row.managerId
+            }).then((res)=>{
+                console.log(res)
+                if(res.data.success){
+                  that.modal = false;//此时managerId没有清空
+                  that.upData()//更新数据
+                }else{
+                     Notice.warning({title:res.data.message});
+                }
+            })
         }
-        // newPeople(){
-        //     manager({
-        //         account:"张三",
-        //         password:"123456"
-        //     }).then(response=>{
-        //         console.log(response)
-        //     })
-        // }
+    },
+    mounted(){
+      var that = this
+      getCity({}).then((res)=>{
+         console.log(res)
+         var city = res.data.data
+         var newCity = []
+         city.map((item,index)=>{
+             var samllCity = []
+             item.children.map((items,indexs)=>{
+                samllCity.push({title:items.placeName,id:items.id})
+             })
+             newCity.push({title:item.placeName,children:samllCity})
+         })
+         that.modalValue.city = newCity
+      })
+      that.upData()
     }
 }
 </script>
