@@ -19,7 +19,7 @@
              </div>
              <div class="data-warp">
                 <div class="button" @click="sreach">查询</div>   
-                <div class="button">重置</div>  
+                <div class="button" @click="cleran">重置</div>  
              </div>
         </div>
         <Table :data="tableData1" :columns="tableColumns1" style="margin-top:35px;" ref="table"></Table>
@@ -47,88 +47,44 @@ export default {
             modal:false,
             hideFoot:true,
             tableData1:[
-                {
-                  number:"1",
-                  bookNumber:"201123123123123",
-                  yNumber:"sds1234564132",
-                  name:"王笑笑",
-                  idCard:"342622199410221611",
-                  phone:"13985334922",
-                  bookMon:"400.00",
-                  project:"一体机",
-                  creartTime:"2019-05-12"
-                },
-                {
-                  number:"2",
-                  bookNumber:"201123123123123",
-                  yNumber:"sds1234564132",
-                  name:"王笑笑",
-                  idCard:"342622199410221611",
-                  phone:"13985334922",
-                  bookMon:"400.00",
-                  project:"一体机",
-                  creartTime:"2019-05-12"
-                },
-                {
-                  number:"3",
-                  bookNumber:"201123123123123",
-                  yNumber:"sds1234564132",
-                  name:"王笑笑",
-                  idCard:"342622199410221611",
-                  phone:"13985334922",
-                  bookMon:"400.00",
-                  project:"一体机",
-                  creartTime:"2019-05-12"
-                },
-                {
-                  number:"4",
-                  bookNumber:"201123123123123",
-                  yNumber:"sds1234564132",
-                  name:"王笑笑",
-                  idCard:"342622199410221611",
-                  phone:"13985334922",
-                  bookMon:"400.00",
-                  project:"一体机",
-                  creartTime:"2019-05-12"
-                }
             ] ,
             tableColumns1: [
                     {
                         title: '序号',
-                        key: 'number'
+                        key: 'no'
                     },
                     {
                         title: '订单编号',
-                        key: 'bookNumber'
+                        key: 'orderNo'
                     },
                     {
                         title: '预约单号',
-                        key: 'yNumber'
+                        key: 'orderToReservation'
                     },
                     {
                         title: '姓名',
-                        key: 'name'
+                        key: 'userName'
                     },
                     {
                         title: '身份证号',
-                        key: 'idCard',
+                        key: 'userCard',
                         width:"160"
                     },
                     {
                         title: '联系方式',
-                        key: 'phone'
+                        key: 'userPhone'
                     },
                     {
                         title: '订单金额',
-                        key: 'bookMon'
+                        key: 'orderPrice'
                     },
                     {
                         title: '项目名称',
-                        key: 'project'
+                        key: 'orderType'
                     },
                     {
                         title: '创建时间',
-                        key: 'creartTime'
+                        key: 'createTime'
                     }
                 ]
         }
@@ -147,12 +103,15 @@ export default {
             console.log(e)
         }, //改变页数
         getData(){
+          var that = this
           getOrder({
             startDate:this.sendData.startDate,
             endDate:this.sendData.endDate,
             currentPage:this.sendData.currentPage,
             pageSize:10
           }).then((res)=>{
+              that.tableData1 = res.data.data.
+              that.sendData.total = res.data.total
               console.log(res)
           })
         },//获取数据
@@ -180,6 +139,13 @@ export default {
             // 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
             var nowDate = date.getFullYear() + seperator + nowMonth + seperator + strDate; 
             return nowDate
+        },
+        cleran(){
+            var nowDate = this.getNowDate();
+            this.sendData.endDate = nowDate;
+            this.sendData.startDate = nowDate;
+            this.sendData.currentPage = 1;
+            this.getData();
         }
     },
     mounted(){

@@ -13,13 +13,13 @@
                          <div class="right-title">LOGIN/登录</div>
                          <Form ref="formInline" :model="formInline" :rules="ruleInline">
                             <Form-item prop="user">
-                                <Input type="text" v-model="formInline.user" placeholder="Username">
+                                <Input type="text" v-model="formInline.user" placeholder="请输入账号">
                                      <Icon type="md-person" slot="prepend"/>
                                     <Icon type="ios-person-outline" ></Icon>
                                 </Input>
                             </Form-item>
                             <Form-item prop="password">
-                                <Input type="password" v-model="formInline.password" placeholder="Password">
+                                <Input type="password" v-model="formInline.password" placeholder="请输入密码">
                                      <Icon type="ios-lock" slot="prepend" />
                                 </Input>
                             </Form-item>

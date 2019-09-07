@@ -46,3 +46,28 @@ export function getOrder(data){//获取预约信息
         params:data
     })
 }
+export function cancelReservation(data){//取消预约
+    return axios.post('/PhysicalReservation/cancelReservation',data)
+}
+export function reservationExport(data){//导出预约
+    return axios.get('/manage/reservationExport',{
+        params:data
+    })
+}
+export function orgList(data){//获取门店
+    if(!data){
+        data ={}
+     }
+     return axios.get('/manage/orgList',{
+         params:data
+     })
+}
+export function getProjectList(data){//获取门店
+     return axios.post('/PhysicalReservation/getProjectList',data)
+}
+export function getReservationTime(data){//获取可预约时间段
+    return axios.post('/PhysicalReservation/getReservationTime',data)
+}
+export function reservation(datas){//新增预约
+    return axios.post('/manage/reservation',datas)
+}

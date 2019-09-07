@@ -17,11 +17,11 @@
                             <Icon type="ios-checkbox-outline" class="font-st"/>
                             <span>预约管理</span>
                         </router-link>
-                        <router-link to="/tijian/card" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
+                        <router-link to="/tijian/card" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3" v-if="false">
                             <span>卡卷管理</span>
                         </router-link>
                     </Submenu>
-                    <Submenu name="2">
+                    <Submenu name="2" v-if="false">
                         <template slot="title">
                             <Icon type="ios-paper"></Icon>
                             会议室预约
@@ -46,7 +46,7 @@
                                 <Icon type="md-person-add" class="font-st"/>
                                 <span>账户管理</span>
                             </router-link>
-                            <router-link to="/guanli/role" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
+                            <router-link to="/guanli/role" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3" v-if="false">
                                 <span>角色权限</span>
                             </router-link>
                         </Submenu>

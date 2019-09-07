@@ -46,7 +46,7 @@
             </div>
             <div class="modal-buttun">
                 <div class="button" @click="sendTable">确认</div>
-                <div class="button">取消</div>
+                <div class="button" @click="cancle">取消</div>
             </div>
         </Modal>
          <Modal
@@ -64,7 +64,7 @@
             </div>
             <div class="modal-buttun">
                 <div class="button" @click="sureDelete">确认</div>
-                <div class="button">取消</div>
+                <div class="button" @click="cancle2">取消</div>
             </div>
         </Modal>
     </div>
@@ -197,7 +197,7 @@ export default {
             tableColumn:[
                 {
                     title:"序号",
-                    key:"managerId"
+                    key:"no"
                 },
                 {
                     title:"姓名",
@@ -364,6 +364,12 @@ export default {
                      Notice.warning({title:res.data.message});
                 }
             })
+        },
+        cancle(){
+            this.modal1 = false
+        },
+        cancle2(){
+             this.modal = false
         }
     },
     mounted(){

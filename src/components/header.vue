@@ -3,7 +3,7 @@
       <div class="loge">
           <img src="../images/loge.png" alt="图标">
       </div>
-      <div class="header-title">PPICC健康上海预约后台管理系统</div>
+      <div class="header-title">PICC健康上海预约后台管理系统</div>
       <div class="touxiang-warp" v-if="show">
           <div class="touxiang-left">
               <div class="border"></div>

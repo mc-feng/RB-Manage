@@ -2,6 +2,20 @@ import axios from 'axios'
 import {Message} from 'iview'
 import Cookies from 'js-cookie'//在cookie中获取token
 import Qs from 'qs'
+const downloadUrl = url => {
+    var ua = navigator.userAgent.toLowerCase(),s
+    let iframe = document.createElement('iframe')
+    if(s = ua.match(/firefox\/([\d.]+)/)){
+      window.open(url)
+    }else{
+      iframe.src = url
+      iframe.style.display = 'none'
+    }
+    iframe.onload = function () {
+      document.body.removeChild(iframe)
+    }
+    document.body.appendChild(iframe)
+}/*创建iframe进行下载*/
 // import util from "@/comment/util";
 function startLoading() {
     Message.loading('正在加载中...', 0)
@@ -21,16 +35,20 @@ axios.interceptors.request.use(
             if (!/^(http|\/\/)/.test(request.url)) {
                 request.url = host + request.url;
             }//设置默认host
+            if(request.url=="http://192.168.31.185:8082/yjjk/PhysicalReservation/cancelReservation"||request.url=="http://192.168.31.185:8082/yjjk/PhysicalReservation/getProjectList"||request.url=="http://192.168.31.185:8082/yjjk/PhysicalReservation/getReservationTime"){
+                request.headers['Content-Type'] = 'application/json;charset=utf-8'
+            }else{
+                if (hasToken) {
+                    if(request.method=="get"){
+                        request.params.token = hasToken
+                    }else{
+                        request.data.token = hasToken
+                    }
+                }
+                request.data = Qs.stringify(request.data);//传参序列化
+            }
             console.log(request)
             console.log(hasToken)
-            if (hasToken) {
-                if(request.method=="get"){
-                    request.params.token = hasToken
-                }else{
-                    request.data.token = hasToken
-                }
-            }
-            request.data = Qs.stringify(request.data);//传参序列化
             return request;
     },
     // (config) => {
@@ -61,6 +79,10 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     (response) => {
         endLoading()
+        if (response.headers && response.headers['content-type'] === 'application/octet-stream;charset=utf-8') {
+            downloadUrl(response.request.responseURL)
+            return {data:{rCode:'success'}}
+          }/*判断是否下载*/
         // response.data = JSON.parse(util.formatString(util.Decrypt(response.data)))
         return response
     },

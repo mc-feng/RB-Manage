@@ -18,14 +18,14 @@
                 </div>
                 <div class="data-font" style="margin-left:40px">
                     <span>姓名：</span>
-                    <Input  placeholder="请输入姓名查找..." style="width:220px" v-model="sendData.name"/>
+                    <Input  placeholder="请输入姓名查找..." style="width:220px" v-model="sendData.applyName"/>
                 </div>
              </div>
              <div class="data-warp">
                 <div class="button" @click="sreach">检索</div>   
-                <div class="button">重置</div>  
+                <div class="button" @click="clreanData">重置</div>  
                 <div class="button" @click="showModel2">新增预约</div>
-                <div class="button" @click="exportData()">导出数据</div>
+                <div class="button" @click="exportData">导出数据</div>
              </div>
         </div>
         <Table :data="tableData1" :columns="tableColumns1" style="margin-top:35px;" ref="table"></Table>
@@ -48,14 +48,15 @@
                 <div class="tips-font">您正在取消预约，请确认</div>
             </div>
             <div class="modal-buttun">
-                <div class="button">确认</div>
-                <div class="button">取消</div>
+                <div class="button" @click="send">确认</div>
+                <div class="button" @click="cancle1">取消</div>
             </div>
         </Modal>
         <Modal
             v-model="modal2"
             :footer-hide="hideFoot"
             width="928"
+            @on-visible-change="changeV"
             >
            <div class="modal-header">
                <Icon type="ios-checkbox-outline" style="color:#F77557;font-size:30px"/>
@@ -65,22 +66,42 @@
                    <div class="from-item">
                        <div class="from-item-content">
                            <div class="from-title">姓名&emsp;&emsp;：</div>
-                           <Input  placeholder="请输入姓名" style="width: 251px" />
+                           <Input  placeholder="请输入姓名" style="width: 251px" v-model="addYuyue.name"/>
                         </div>
                         <div class="from-item-content">
                              <div class="from-title">手机号：</div>
-                             <Input placeholder="请输入手机号" style="width: 251px" />
+                             <Input placeholder="请输入手机号" style="width: 251px" v-model="addYuyue.phone"/>
                         </div>
                    </div>
                    <div class="from-item">
                        <div class="from-item-content">
                            <div class="from-title">身份证号：</div>
-                           <Input placeholder="请输入身份证号" style="width: 251px" />
+                           <Input placeholder="请输入身份证号" style="width: 251px" v-model="addYuyue.cardId"/>
+                       </div>
+                   </div>
+                   <div class="from-item">
+                       <div class="from-item-content">
+                           <div class="from-title">卡片编码：</div>
+                           <Input placeholder="请输入卡片编码" style="width: 251px" v-model="addYuyue.cardNumber"/>
                        </div>
                        <div class="from-item-content">
+                           <div class="from-title">卡片密码：</div>
+                           <Input placeholder="请输入卡片密码" style="width: 251px" v-model="addYuyue.cardPassword"/>
+                       </div>
+                   </div>
+                   <div class="from-item">
+                       <div class="from-item-content">
+                            <div class="from-title">预约门店：</div>
+                            <Select style="width:386px" @on-change="selectMenDian" v-model="addYuyue.menDianId" label-in-value>
+                                    <Option v-for="item in menDianList" :value="item.serviceBranch" :key="item.serviceBranch">{{ item.serviceBranchName }}</Option>
+                            </Select>
+                        </div>
+                   </div>
+                   <div class="from-item">
+                       <div class="from-item-content">
                             <div class="from-title">预约项目：</div>
-                            <Select style="width:251px">
-                                    <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Select style="width:251px" v-model="addYuyue.projectId" label-in-value @on-change="selectProject" >
+                                    <Option v-for="item in projectList" :value="item.serviceItem" :key="item.serviceItem">{{ item.serviceItemName}}</Option>
                             </Select>
                         </div>
                    </div>
@@ -90,200 +111,138 @@
                           <Date-picker 
                             placeholder="选择日期" 
                             style="width:190px;" 
-                            value=""
+                            :value="addYuyue.selectDate"
+                            @on-change="handleChange3"
                             ></Date-picker>
                        </div>
                    </div>
                    <div class="from-last">
                        <div class="from-title">选择时间段：</div>
                        <div class="from-tiem-warp">
-                           <div  class="time-duan"  :class='item.check?"xuanze":item.status==1?"":"disable"'  v-for="(item,index) in timeList"  :key="index" @click="changTime(index)">
-                               <Icon type="ios-egg" :style="[{'font-size':'10px'},{color:item.check?'#FFFFFF':item.status==1?'#F77557':'#B3B5B8'}]"/>
-                               <div class="time-duan-font" :style="{color:item.check?'#FFFFFF':item.status==1?'#000000':'#B3B6B8'}">{{item.time}}</div>
+                           <div  class="time-duan"  :class='item.check?"xuanze":item.isUs==0?"":"disable"'  v-for="(item,index) in timeList"  :key="index" @click="changTime(index)">
+                               <Icon type="ios-egg" :style="[{'font-size':'10px'},{color:item.check?'#FFFFFF':item.isUs==0?'#F77557':'#B3B5B8'}]"/>
+                               <div class="time-duan-font" :style="{color:item.check?'#FFFFFF':item.isUs==0?'#000000':'#B3B6B8'}">{{item.serviceTime}}</div>
                            </div>
                        </div>
                    </div>
             </div>
             <div class="buttun-warp">
-                <div class="button">取消</div>
-                <div class="button">确定</div>
+                <div class="button" @click="cancle2">取消</div>
+                <div class="button" @click="sendAdd">确定</div>
             </div>
         </Modal>
     </div>
 </template>
 <script>
-import {getYuyue} from "../../api/api";
+import {getYuyue,cancelReservation,reservationExport,orgList,getProjectList,getReservationTime,reservation} from "../../api/api";
 import {Message} from 'iview'
 export default {
     data(){
         return{
+            nowreservationId:"",//取消预约时门店id
+            addYuyue:{
+                name:"",
+                phone:"",
+                cardId:"",
+                cardNumber:"",
+                cardPassword:"",
+                menDianId:"",
+                menDianName:"",
+                projectId:"",
+                projectName:"",
+                selectDate:"",
+                selectTime:""
+            },
             sendData:{
                 startDate:"",
                 endDate:"",
-                name:"",
+                applyName:"",
                 currentPage:1,
                 pageSize:10,
                 total:0
             },//发送查询数据
             modal:false,
             modal2:false,
-            cityList: [
-                    {
-                        value: '一体机',
-                        label: '一体机'
-                    },
-                    {
-                        value: '心脏机器',
-                        label: '心脏机器'
-                    },
-            ], 
-          value:"",
-          timeList:[
-              {
-                  time:"9:30 ~ 10:00",
-                  status:1,
-                  check:false,
-              },
-              {
-                  time:"9:30 ~ 10:00",
-                  status:1,
-                  check:false,
-              },
-              {
-                  time:"9:30 ~ 10:00",
-                  status:2,
-                  check:false,
-              },
-              {
-                  time:"9:30 ~ 10:00",
-                  status:2,
-                  check:false,
-              },
-              {
-                  time:"9:30 ~ 10:00",
-                  status:1,
-                  check:false,
-              },
-              {
-                  time:"9:30 ~ 10:00",
-                  status:2,
-                  check:false,
-              }],
+            menDianList:[],//门店列表
+            projectList:[],//项目列表
+            value:"",
+            timeList:[
+            ],
             hideFoot:true,
-            tableData1:[
-                    {
-                        number:"1",
-                        bookNumber:"En1369547233",
-                        name:"张三",
-                        idCard:"342622199610251611",
-                        phone:"13965334811",
-                        project:"一体机",
-                        pay:"卡密支付",
-                        bookTime:"2019-12-1",
-                        state:"已体检",
-                        creatTime:"2019-6-6",
-                        operate:"取消预约"
-                    },
-                    {
-                        number:"2",
-                        bookNumber:"En1369547233",
-                        name:"张三",
-                        idCard:"342622199610251611",
-                        phone:"13965334811",
-                        project:"一体机",
-                        pay:"卡密支付",
-                        bookTime:"2019-12-1",
-                        state:"待体检",
-                        creatTime:"2019-6-6",
-                        operate:"已取消"
-                    },
-                    {
-                        number:"3",
-                        bookNumber:"En1369547233",
-                        name:"张三",
-                        idCard:"342622199610251611",
-                        phone:"13965334811",
-                        project:"一体机",
-                        pay:"卡密支付",
-                        bookTime:"2019-12-1",
-                        state:"已关闭",
-                        creatTime:"2019-6-6",
-                        operate:"取消预约"
-                    }
-                ] ,
-                tableColumns1: [
-                    {
-                        title: '序号',
-                        key: 'number'
-                    },
-                    {
-                        title: '预约单号',
-                        key: 'bookNumber'
-                    },
-                    {
-                        title: '姓名',
-                        key: 'name'
-                    },
-                    {
-                        title: '身份证号',
-                        key: 'idCard',
-                        width:"160"
-                    },
-                    {
-                        title:"联系方式",
-                        key:"phone"
-                    },
-                    {
-                        title:"预约项目",
-                        key:"project"
-                    },
-                    {
-                        title:"支付方式",
-                        key:"pay"
-                    },
-                    {
-                        title:"预约时间",
-                        key:"bookTime",
-                        render:(h,params)=>{
-                             return h('div', {
-                                style:{color:"#0091FF"}
-                            }, params.row.bookTime);
-                        }
-                    },
-                    {
-                        title:"状态",
-                        key:"state",
-                        render: (h, params) => {
-                            const row = params.row;
-                            const color = row.state === '已体检' ? '#000000' : row.state === '待体检' ? '#F77557' : row.state === '已关闭' ? '#bfbfbf' : 'red';
-                            const text = row.state === '已体检' ? '已体检' : row.state === '待体检' ? '待体检' : row.state === '已关闭' ? '已关闭' : '错误'
+            tableData1:[],
+            tableColumns1: [
+                {
+                    title: '序号',
+                    key: 'no'
+                },
+                {
+                    title: '预约单号',
+                    key: 'reservationNumber'
+                },
+                {
+                    title: '姓名',
+                    key: 'applyName'
+                },
+                {
+                    title: '身份证号',
+                    key: 'applyidNo',
+                    width:"160"
+                },
+                {
+                    title:"联系方式",
+                    key:"applyTel"
+                },
+                {
+                    title:"预约项目",
+                    key:"serviceItemName"
+                },
+                {
+                    title:"支付方式",
+                    key:"paymentName"
+                },
+                {
+                    title:"预约时间",
+                    key:"reservationTime",
+                    render:(h,params)=>{
                             return h('div', {
-                                style:{color:color}
-                            }, text);
-                        }
-                    },
-                    {
-                        title:"创建时间",
-                        key:"creatTime"
-                    },
-                    {
-                        title:"操作",
-                        key:"operate",
-                        render: (h, params) => {
-                                const row = params.row;
-                                const check = row.operate === '取消预约'?true:false;
-                                if(check){    
-                                    return h('div', {
-                                        style:{
-                                            color:"#EA4849",
-                                            cursor:'pointer'
-                                        },
-                                        on:{click:()=>{this.modal=true;console.log(params)}}
-                                    }, "取消预约");
-                                }
-                        }
+                            style:{color:"#0091FF"}
+                        }, params.row.reservationTime);
                     }
-                ]
+                },
+                {
+                    title:"状态",
+                    key:"manageReservationStatus",
+                    render: (h, params) => {
+                        const row = params.row;
+                        const color = row.manageReservationStatus == '1' ? '#000000' : row.manageReservationStatus == '0' ? '#F77557' : row.manageReservationStatus == '2' ? '#bfbfbf' : 'red';
+                        const text = row.manageReservationStatus == '1' ? '已体检' : row.manageReservationStatus == '0' ? '待体检' : row.manageReservationStatus == '2' ? '已关闭' : '错误'
+                        return h('div', {
+                            style:{color:color}
+                        }, text);
+                    }
+                },
+                {
+                    title:"创建时间",
+                    key:"createTime"
+                },
+                {
+                    title:"操作",
+                    key:"operate",
+                    render: (h, params) => {
+                            const row = params.row;
+                            const check = row.manageReservationStatus == '0'?true:false;
+                            if(check){    
+                                return h('div', {
+                                    style:{
+                                        color:"#EA4849",
+                                        cursor:'pointer'
+                                    },
+                                    on:{click:()=>{this.modal=true;console.log(params);this.nowreservationId=params.row.reservationNumber;console.log(this.nowreservationId)}}
+                                }, "取消预约");
+                            }
+                    }
+                }
+            ]
         }
     },
     methods:{
@@ -293,10 +252,38 @@ export default {
        handleChange2(data){
            this.sendData.endDate = data
        },
+       handleChange3(data){//选择时间获取时间列表
+           console.log(data)
+           var that = this
+           if(!this.addYuyue.menDianId){
+             Message.warning("请先选择门店")
+           }else if(!this.addYuyue.projectId){
+              Message.warning("请先选择项目")
+           }
+           this.addYuyue.selectDate = data
+           getReservationTime({
+               parameterOne:this.addYuyue.projectId,
+               parameterTwo:this.addYuyue.menDianId,
+               parameterThree:data
+           }).then((res)=>{
+               that.timeList = res.data.data.serviceArrangeList
+               that.timeList.map((item,index)=>{
+                  item.check = false
+               })
+               console.log(that.timeList)
+           })
+       },
         exportData (type) {
-            this.$refs.table.exportCsv({
-                filename: 'The original data'
-            });
+            reservationExport({
+               startDate:this.sendData.startDate,
+               endDate:this.sendData.endDate,
+               applyName:this.sendData.applyName
+            }).then((res)=>{
+                console.log(res)
+            })
+            // this.$refs.table.exportCsv({
+            //     filename: 'The original data'
+            // });
         },   //导出数据
         onpagechange(e){
             //需要总条数和当前的页数
@@ -316,7 +303,14 @@ export default {
         //     }// 源码中不等于1会自动变成页数1会改变onchange
         // },//改变分页
         getData(){
+            var that = this
+            console.log(that.sendData)
             getYuyue(this.sendData).then((res)=>{
+                if(res.data.data){ 
+                 that.tableData1 = res.data.data.list
+                 that.sendData.total = res.data.data.total
+                }else{
+                }
              console.log(res)
             })
         },
@@ -325,11 +319,15 @@ export default {
         },//展示弹框
         changTime(e){
              console.log(e);
-             if(this.timeList[e].status==1){    
-                this.timeList.map((item)=>{
+             var that = this
+             if(this.timeList[e].isUs==0){    
+                that.timeList.map((item)=>{
                     item.check = false;
                 })
-                this.timeList[e].check = true
+                that.timeList[e].check = true
+                console.log(that.timeList[e].check);
+                that.$set(that.timeList,e,that.timeList[e])//让数字更新
+                this.addYuyue.selectTime = this.timeList[e].serviceDateTime
              }else{
                  Message.warning("此时间段已经关闭")
              }
@@ -354,6 +352,104 @@ export default {
             // 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
             var nowDate = date.getFullYear() + seperator + nowMonth + seperator + strDate; 
             return nowDate
+        },
+        send(){//发送数据
+            var that = this
+            cancelReservation({
+                reservationNumber:this.nowreservationId
+            }).then((res)=>{
+               console.log(res)
+               that.modal = false;
+               that.getData()
+            })
+        },
+        sendAdd(){
+            var that = this
+            var data = this.addYuyue
+            if(!data.name){
+                 Message.warning("请填写姓名")
+            }else if(!data.phone){
+                Message.warning("请填手机号码")
+            }else if(!data.cardId){
+                Message.warning("请填身份证")
+            }else if(!data.cardNumber){
+                Message.warning("请填卡号")
+            }else if(!data.cardPassword){
+                Message.warning("请填卡密")
+            }else if(!data.menDianId){
+                Message.warning("请填门店")
+            }else if(!data.projectId){
+                Message.warning("请选择项目")
+            }else if(!data.selectDate){
+                Message.warning("请选择日期")
+            }else if(!data.selectTime){
+                Message.warning("请选择时间段")
+            }else{
+               reservation({
+                   applyName:data.name,
+                   applyTel:data.phone,
+                   applyIDNo:data.cardId,
+                   cardNumber:data.cardNumber,
+                   passWord:data.cardPassword,
+                   serviceBranch:data.menDianId,
+                   serviceItem:data.projectId,
+                   serviceItemName:data.projectName,
+                   serviceBranchName:data.menDianName,
+                   serviceDateTime:data.selectTime
+               }).then((res)=>{
+                   if(res.data.success){
+                       that.modal2 = false
+                       that.getData()
+                   }else{
+                       Message.warning(res.data.message)
+                   }
+                 console.log(res)
+               })
+            }
+        },
+        cancle1(){//弹框一关闭
+            this.modal = false
+        },
+        cancle2(){//弹框二关闭
+            this.modal2 = false
+        },
+        changeV(){//弹框二消失
+            for(let key in this.addYuyue){
+                this.addYuyue[key] = ""
+            } 
+            console.log(this.addYuyue)
+        },
+        getMenDian(){//获取门店信息
+            var that = this
+            orgList({}).then((res)=>{
+                this.menDianList = res.data.data.serviceOrgList
+                console.log(res)
+            })
+        },
+        selectMenDian(e){//选择门店
+            var that = this;
+            this.addYuyue.menDianId = e.value
+            this.addYuyue.menDianName = e.label
+            getProjectList({
+                serviceBranch:e.value
+            }).then((res)=>{
+                that.projectList = res.data.data
+                console.log(res.data.data)
+            })
+          console.log(e)
+        },
+        selectProject(e){//选择项目
+            this.addYuyue.projectId = e.value
+            this.addYuyue.projectName = e.label
+        },
+        clreanData(){
+            var nowDate = this.getNowDate();
+            this.sendData.endDate = nowDate;
+            this.sendData.startDate = nowDate;
+            this.sendData.applyName = "";
+            this.sendData.currentPage = 1;
+            this.sendData.pageSize = 10;
+            this.getData()
         }
     },
     mounted(){
@@ -362,6 +458,7 @@ export default {
         this.sendData.startDate = nowDate;
         console.log(nowDate)
         this.getData()
+        this.getMenDian()
     }
 }
 </script>
