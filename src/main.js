@@ -9,6 +9,7 @@ import getPageTitle from '@/until/get-page-title';//设置头title
 import Cookies from 'js-cookie'//在cookie中获取token
 import {store} from "./until/store";//全局仓库
 import {getInfo} from "./api/api";//请求
+import './style.css'
 Vue.config.productionTip = false
 Vue.use(iview)
 const whiteList = ['/login'] // no redirect whitelist

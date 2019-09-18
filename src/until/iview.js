@@ -1,4 +1,4 @@
-import { Card, Button, Table, Menu, Row, Col, Icon, Input, Select, Option, Form, Modal, MenuItem, MenuGroup, Submenu, Tabs, TabPane, Radio, RadioGroup,FormItem,DatePicker,Page, Message,Switch,Tree} from 'iview';
+import { Card, Button, Table, Menu, Row, Col, Icon, Input, Select, Option, Form, Modal, MenuItem, MenuGroup, Submenu, Tabs, TabPane, Radio, RadioGroup,FormItem,DatePicker,Page, Message,Switch,Tree,Steps,Step} from 'iview';
 
 const iview = {
     install: function (Vue) {
@@ -26,7 +26,9 @@ const iview = {
         Vue.component("Page",Page)  
         Vue.component("Message",Message) 
         Vue.component("Switchs", Switch)   
-        Vue.component("Tree",Tree)  
+        Vue.component("Tree",Tree)
+        Vue.component("Steps",Steps)   
+        Vue.component("Step",Step)  
     }
 }
 

@@ -71,3 +71,8 @@ export function getReservationTime(data){//获取可预约时间段
 export function reservation(datas){//新增预约
     return axios.post('/manage/reservation',datas)
 }
+export function cardPackage(data){//获取卡包
+    return axios.get('/manage/cardPackage',{
+        params:data
+    })
+}

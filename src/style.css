@@ -1,0 +1,30 @@
+@font-face {
+    font-family: "custom-font";  /* project id 1264655 */
+    src: url('//at.alicdn.com/t/font_1264655_gl6dwutvoib.eot');
+    src: url('//at.alicdn.com/t/font_1264655_gl6dwutvoib.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1264655_gl6dwutvoib.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1264655_gl6dwutvoib.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1264655_gl6dwutvoib.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1264655_gl6dwutvoib.svg#iconfont') format('svg');
+  }
+.iconfont {
+    display: inline-block;
+    font-family: 'custom-font' !important;
+    speak:none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: middle;
+}
+.i-icon-user:before { content: "\e62b"}
+.i-icon-setting:before { content: "\e750"}
+.i-icon-yuyue:before { content: "\e632"}
+.i-icon-dingdan:before { content: "\e633"}
+.i-icon-quxiao:before { content: "\e649"}
+.i-icon-zhanghu:before { content: "\e60e"}
+.i-icon-jinggao:before { content: "\e617"}

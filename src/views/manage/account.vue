@@ -22,7 +22,7 @@
             @on-visible-change="changeV"
             >
             <div class="modal-title">
-                <Icon type="ios-person-add-outline" color="#F77557" size="30"/>
+                <Icon custom="iconfont i-icon-zhanghu" color="#F77557" size="30"/>
                 <div class="title-font">{{modalValue.title}}</div>
             </div>
             <div class="modal-content">
@@ -55,7 +55,7 @@
             width="775"
             >
             <div class="modal-title">
-                <Icon type="ios-cog-outline" color="#F77557" size="30"/>
+                <Icon custom="iconfont i-icon-setting" color="#F77557" size="30"/>
                 <div class="title-font">删除用户</div>
             </div>
             <div class="modal-tips">
@@ -267,7 +267,7 @@ export default {
                 this.modalValue.name = ""
                 this.modalValue.account = ""
                 this.modalValue.password = ""
-                this.modalValue.cityId = ""
+                // this.modalValue.cityId = ""
             }
             this.modal1 = true
         },
@@ -278,12 +278,13 @@ export default {
                 this.modalValue.name = ""
                 this.modalValue.account = ""
                 this.modalValue.password = ""
-                this.modalValue.cityId = ""
+                // this.modalValue.cityId = ""
                 this.modalValue.canCheck = false
                 console.log("hi,我消失了")
             }
         },
         changeTree(e){
+            console.log(e)
             if(e[0].id){
                 this.modalValue.cityId = e[0].id
                 console.log(e[0].id)
@@ -293,25 +294,37 @@ export default {
             var that = this
             if(this.modalValue.managerId){
                 console.log(this.modalValue)
-                 reviseUser({
-                     managerId:this.modalValue.managerId,
-                     cityId:this.modalValue.cityId,
-                     name:this.modalValue.name,
-                     password:this.modalValue.password
-                 }).then((res)=>{
-                     if(res.data.success){
-                        that.modal1 = false;
-                        that.upData()
-                    }
-                    console.log(res)
-                 })
+                if(this.modalValue.name.length>15){
+                   Notice.warning({title:"姓名不能超过15位"})
+                }else if(!(/^[a-zA-Z0-9]{6,}$/.test(this.modalValue.password))){
+                   Notice.warning({title:"密码长度不少于6位，字母或数字组成"})
+                }else{
+                    reviseUser({
+                        managerId:this.modalValue.managerId,
+                        cityId:this.modalValue.cityId,
+                        name:this.modalValue.name,
+                        password:this.modalValue.password
+                    }).then((res)=>{
+                        if(res.data.success){
+                            that.modal1 = false;
+                            that.upData()
+                        }
+                        console.log(res)
+                    })
+                }
             }else{
                 if(this.modalValue.name==""){
                     Notice.warning({title:"请填写姓名"});
+                }else if(this.modalValue.name.length>15){
+                   Notice.warning({title:"姓名不能超过15位"})
                 }else if(this.modalValue.account==''){
                     Notice.warning({title:"请填写账号"});
+                }else if(this.modalValue.account.length>20){
+                    Notice.warning({title:"账户不能超过20位"})
                 }else if(this.modalValue.password==""){
                     Notice.warning({title:"请填写密码"});
+                }else if(!(/^[a-zA-Z0-9]{6,}$/.test(this.modalValue.password))){
+                   Notice.warning({title:"密码长度不少于6位，字母或数字组成"})
                 }else if(this.modalValue.cityId ==""){
                     Notice.warning({title:"请选择城市"});
                 }else{
@@ -324,6 +337,8 @@ export default {
                         if(res.data.success){
                             that.modal1 = false;
                             that.upData()
+                        }else{
+                             Notice.warning({title:res.data.message});
                         }
                         console.log(res)
                     })
@@ -383,7 +398,11 @@ export default {
              item.children.map((items,indexs)=>{
                 samllCity.push({title:items.placeName,id:items.id})
              })
-             newCity.push({title:item.placeName,children:samllCity})
+             if(item.placeName=="上海市"||item.placeName=="重庆市"||item.placeName=="北京市"||item.placeName=="天津市"){
+                 newCity.push({title:item.placeName,children:samllCity,id:item.id})
+             }else{
+                newCity.push({title:item.placeName,children:samllCity})
+             }
          })
          that.modalValue.city = newCity
       })

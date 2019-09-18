@@ -19,7 +19,7 @@
                                 </Input>
                             </Form-item>
                             <Form-item prop="password">
-                                <Input type="password" v-model="formInline.password" placeholder="请输入密码">
+                                <Input type="password" v-model="formInline.password" placeholder="请输入密码" @keyup.enter.native="handleSubmit('formInline')">
                                      <Icon type="ios-lock" slot="prepend" />
                                 </Input>
                             </Form-item>

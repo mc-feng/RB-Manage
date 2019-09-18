@@ -25,7 +25,7 @@
         <Table :data="tableData1" :columns="tableColumns1" style="margin-top:35px;" ref="table"></Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
-                <Page :total="sendData.total" @on-change="changePage"></Page>
+                <Page :total="sendData.total" @on-change="changePage" :current="sendData.currentPage"></Page>
             </div>
         </div>
     </div>
@@ -55,24 +55,28 @@ export default {
                     },
                     {
                         title: '订单编号',
-                        key: 'orderNo'
+                        key: 'orderNo',
+                        tooltip:true
                     },
                     {
                         title: '预约单号',
-                        key: 'orderToReservation'
+                        key: 'orderToReservation',
+                        tooltip:true
                     },
                     {
                         title: '姓名',
-                        key: 'userName'
+                        key: 'userName',
+                        tooltip:true
                     },
                     {
                         title: '身份证号',
                         key: 'userCard',
-                        width:"160"
+                        tooltip:true
                     },
                     {
                         title: '联系方式',
-                        key: 'userPhone'
+                        key: 'userPhone',
+                        tooltip:true
                     },
                     {
                         title: '订单金额',
@@ -80,11 +84,13 @@ export default {
                     },
                     {
                         title: '项目名称',
-                        key: 'orderType'
+                        key: 'orderType',
+                        tooltip:true
                     },
                     {
                         title: '创建时间',
-                        key: 'createTime'
+                        key: 'createTime',
+                        tooltip:true
                     }
                 ]
         }
@@ -110,8 +116,13 @@ export default {
             currentPage:this.sendData.currentPage,
             pageSize:10
           }).then((res)=>{
-              that.tableData1 = res.data.data.
-              that.sendData.total = res.data.total
+              if(res.data.success&&res.data.data!=""){
+                  that.tableData1 = res.data.data.list
+                  that.sendData.total = res.data.data.total
+              }else if(res.data.data ==""){
+                  that.tableData1 = []
+                  that.sendData.total = 0
+              }
               console.log(res)
           })
         },//获取数据

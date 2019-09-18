@@ -6,15 +6,16 @@
                 <Menu theme="light" width="185px" :open-names="opendSub">
                     <Submenu name="1">
                         <template slot="title">
-                            <Icon type="md-person" />
+                             <Icon  custom="iconfont i-icon-user" />
+                            <!-- <Icon type="md-person" /> -->
                             体检预约
                         </template>
                         <router-link to="/tijian/name" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
-                            <Icon type="ios-calendar-outline" class="font-st"/>
+                            <Icon custom="iconfont i-icon-dingdan" class="font-st"/>
                             <span>订单管理</span>
                         </router-link>
                         <router-link to="/tijian/yuyue" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-2">
-                            <Icon type="ios-checkbox-outline" class="font-st"/>
+                            <Icon custom="iconfont i-icon-yuyue" class="font-st"/>
                             <span>预约管理</span>
                         </router-link>
                         <router-link to="/tijian/card" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3" v-if="false">
@@ -39,11 +40,11 @@
                     <template v-if="role==0">
                         <Submenu name="3">
                             <template slot="title">
-                                <Icon type="md-settings"></Icon>
+                                <Icon custom="iconfont i-icon-setting"></Icon>
                                 系统设置
                             </template>
                             <router-link to="/guanli/account" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3">
-                                <Icon type="md-person-add" class="font-st"/>
+                                <Icon custom="iconfont i-icon-zhanghu" class="font-st"/>
                                 <span>账户管理</span>
                             </router-link>
                             <router-link to="/guanli/role" tag='li'  class="ivu-menu-item" active-class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected" name="1-3" v-if="false">

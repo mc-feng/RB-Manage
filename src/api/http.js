@@ -28,8 +28,12 @@ axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 // 请求拦截
 axios.interceptors.request.use(
     (request)=>{
-             startLoading()
+             if(request.url=="/manage/orgList"){
+             }else{
+                startLoading()
+             }
             // const host = ' https://www.easy-mock.com/mock/5d0f1d0c7e96485dab3767e4/RBmeetin'
+            // const host = "https://www.tonticn.cn:8092/yjjk"
             const host = "http://192.168.31.185:8082/yjjk"
             const hasToken = Cookies.get("token");
             if (!/^(http|\/\/)/.test(request.url)) {
@@ -51,24 +55,6 @@ axios.interceptors.request.use(
             console.log(hasToken)
             return request;
     },
-    // (config) => {
-    //     config.data = Qs.stringify(config.data);
-    //     console.log(config)
-    //     console.log(hasToken)
-    //     confing.headers = {
-    //       'Content-Type':'application/x-www-form-urlencoded'
-    //     }
-    //     if (hasToken) {
-    //         confing.headers.Authorization  = hasToken
-    //     }
-    //     return config;
-    //     // //设置请求头
-    //     // if (localStorage.eToken) {
-    //     //     confing.headers.Authorization = localStorage.eToken
-    //     // }
-
-    //     // return confing
-    // },
     (error) => {
         return Promise.reject(error)
     }
