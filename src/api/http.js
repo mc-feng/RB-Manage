@@ -18,9 +18,8 @@ const downloadUrl = url => {
 }/*创建iframe进行下载*/
 // import util from "@/comment/util";
 function startLoading() {
-    Message.loading('正在加载中...', 0)
+    Message.loading({content:'正在加载中...', duration: 0})
 }
-
 function endLoading() {
     Message.destroy()
 }
@@ -28,18 +27,20 @@ axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 // 请求拦截
 axios.interceptors.request.use(
     (request)=>{
-             if(request.url=="/manage/orgList"){
+             if(request.url=="/manage/orgList"||request.url=="/manage/city"){
              }else{
                 startLoading()
              }
+             var local = window.location.host;
+             const host= 'http://'+local+'/yjjk';
             // const host = ' https://www.easy-mock.com/mock/5d0f1d0c7e96485dab3767e4/RBmeetin'
             // const host = "https://www.tonticn.cn:8092/yjjk"
-            const host = "http://192.168.31.185:8082/yjjk"
+            // const host = "http://192.168.31.185:8082/yjjk"
             const hasToken = Cookies.get("token");
             if (!/^(http|\/\/)/.test(request.url)) {
                 request.url = host + request.url;
             }//设置默认host
-            if(request.url=="http://192.168.31.185:8082/yjjk/PhysicalReservation/cancelReservation"||request.url=="http://192.168.31.185:8082/yjjk/PhysicalReservation/getProjectList"||request.url=="http://192.168.31.185:8082/yjjk/PhysicalReservation/getReservationTime"){
+            if(request.url== host+"/PhysicalReservation/cancelReservation"||request.url== host+"/PhysicalReservation/getProjectList"||request.url==host+"/PhysicalReservation/getReservationTime"){
                 request.headers['Content-Type'] = 'application/json;charset=utf-8'
             }else{
                 if (hasToken) {
@@ -59,9 +60,7 @@ axios.interceptors.request.use(
         return Promise.reject(error)
     }
 )
-
 //响应拦截
-
 axios.interceptors.response.use(
     (response) => {
         endLoading()

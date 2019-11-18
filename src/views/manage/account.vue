@@ -9,7 +9,7 @@
              <div class="button" @click="showModel(false)">新增人员</div>
              <!-- <div class="button" @click="newPeople">新增人员</div> -->
          </div>
-         <Table :data="tableData" :columns="tableColumn" style="margin-top:107px;" ref="table" width=1567></Table>
+         <Table :data="tableData" :columns="tableColumn" style="margin-top:107px;" ref="table"></Table>
          <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
                 <Page :total="filer.total" :current="filer.page" @on-change="changePage" :page-size="filer.size"/>
@@ -71,7 +71,7 @@
 </template>
 <style scoped lang="scss">
    .main-warp{
-       padding:0px 138px 0px 27px;
+       padding:0px 138px 0px 138px;
    }
    .button{
             width: 109px;
